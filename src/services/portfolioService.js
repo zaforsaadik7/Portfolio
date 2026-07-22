@@ -125,13 +125,24 @@ export const persistPortfolioData = async (data) => {
 };
 
 export const uploadPortfolioFile = async (file, storagePath) => {
-  if (isFirebaseConfigured()) {
-    const fileRef = ref(storage, storagePath);
-    await uploadBytes(fileRef, file);
-    return getDownloadURL(fileRef);
+  const base64Promise = readFileAsDataURL(file);
+
+  if (isFirebaseConfigured() && storage) {
+    try {
+      const fileRef = ref(storage, storagePath);
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Storage upload timeout')), 3000)
+      );
+
+      await Promise.race([uploadBytes(fileRef, file), timeoutPromise]);
+      return await getDownloadURL(fileRef);
+    } catch (err) {
+      console.warn('Firebase Storage upload warning, using fast local encoding:', err.message);
+      return await base64Promise;
+    }
   }
 
-  return readFileAsDataURL(file);
+  return await base64Promise;
 };
 
 export { isFirebaseConfigured };
