@@ -998,3 +998,108 @@ a:hover {
   font-family: var(--font-heading);
   font-size: 1.1rem;
 }
+
+/* ==========================================================================
+   Interactive "Pop" Zoom-In & Selection Animations
+   ========================================================================== */
+
+.hero-card,
+.section-card,
+.item-card,
+.education-item,
+.contact-row,
+.timeline-item {
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.28s ease,
+              border-color 0.28s ease,
+              background-color 0.28s ease !important;
+  will-change: transform, box-shadow;
+}
+
+.hero-card:hover {
+  transform: scale(1.015) translateY(-3px);
+  box-shadow: 0 16px 40px rgba(26, 24, 20, 0.08), 0 0 0 1px rgba(17, 94, 89, 0.2);
+}
+
+.section-card:hover {
+  transform: scale(1.018) translateY(-4px);
+  box-shadow: 0 16px 40px rgba(26, 24, 20, 0.09), 0 0 0 1px rgba(17, 94, 89, 0.25);
+  border-color: rgba(17, 94, 89, 0.4);
+}
+
+.item-card:hover,
+.education-item:hover,
+.timeline-item:hover {
+  transform: scale(1.025) translateY(-3px);
+  box-shadow: 0 10px 24px rgba(17, 94, 89, 0.09), 0 2px 6px rgba(0, 0, 0, 0.04);
+  border-color: rgba(17, 94, 89, 0.35);
+}
+
+.contact-row {
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin: 2px 0;
+}
+
+.contact-row:hover {
+  transform: scale(1.025) translateX(3px);
+  background-color: var(--bg-card-muted);
+}
+
+.profile-photo-wrapper {
+  transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.32s ease,
+              border-color 0.32s ease !important;
+}
+
+.profile-photo-wrapper:hover {
+  transform: scale(1.08) rotate(-1.5deg);
+  box-shadow: 0 16px 36px rgba(17, 94, 89, 0.24);
+  border-color: var(--color-accent);
+}
+
+.interest-tag,
+.skill-badge,
+.tag-pill,
+.status-badge,
+.hero-status,
+.hero-meta-item {
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.26s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.26s ease,
+              background-color 0.26s ease,
+              color 0.26s ease,
+              border-color 0.26s ease !important;
+  will-change: transform;
+  cursor: pointer;
+}
+
+.interest-tag:hover,
+.skill-badge:hover,
+.tag-pill:hover {
+  transform: scale(1.09) translateY(-2px);
+  box-shadow: 0 6px 18px rgba(17, 94, 89, 0.16);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background-color: var(--bg-elevated);
+}
+
+.hero-meta-item:hover,
+.hero-status:hover {
+  transform: scale(1.06) translateY(-1px);
+  color: var(--color-accent);
+}
+
+.hero-card:active,
+.section-card:active,
+.item-card:active,
+.education-item:active,
+.interest-tag:active,
+.skill-badge:active,
+.tag-pill:active,
+.profile-photo-wrapper:active,
+.btn:active {
+  transform: scale(0.97) !important;
+  transition: transform 0.1s ease !important;
+}
