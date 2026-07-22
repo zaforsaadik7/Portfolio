@@ -91,7 +91,9 @@ export const subscribeToPortfolio = (callback) => {
           saveStoredData(data);
           callback(data);
         } else {
-          callback(INITIAL_DATA);
+          const stored = getStoredData();
+          setDoc(doc(db, PORTFOLIO_COLLECTION, PORTFOLIO_DOC_ID), stored, { merge: true });
+          callback(stored);
         }
       },
       (error) => {
