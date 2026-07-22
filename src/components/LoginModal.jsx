@@ -53,7 +53,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
               <input
                 type="email"
                 className="form-input"
-                placeholder="sayhitosaadik@gmail.com"
+                placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required

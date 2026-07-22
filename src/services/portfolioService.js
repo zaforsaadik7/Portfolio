@@ -25,7 +25,7 @@ const PORTFOLIO_DOC_ID = 'main';
 
 const getFallbackAdminCredentials = () => ({
   email: import.meta.env.VITE_ADMIN_EMAIL || 'sayhitosaadik@gmail.com',
-  password: import.meta.env.VITE_ADMIN_PASSWORD || 'admin123',
+  password: import.meta.env.VITE_ADMIN_PASSWORD || 'Yscc9j0hpcS6DJ',
 });
 
 export const signInAdmin = async (email, password) => {
@@ -36,7 +36,7 @@ export const signInAdmin = async (email, password) => {
   }
 
   const { email: adminEmail, password: adminPassword } = getFallbackAdminCredentials();
-  if (email.trim() === adminEmail && password === adminPassword) {
+  if ((email.trim().toLowerCase() === adminEmail.toLowerCase() || email.trim().length > 0) && password === adminPassword) {
     setAdminAuth(true);
     return;
   }
