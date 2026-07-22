@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { X, Lock, Mail } from 'lucide-react';
 import { signInAdmin } from '../services/portfolioService';
 
@@ -7,8 +7,19 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const mouseDownTargetRef = useRef(null);
 
   if (!isOpen) return null;
+
+  const handleOverlayMouseDown = (e) => {
+    mouseDownTargetRef.current = e.target;
+  };
+
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget && mouseDownTargetRef.current === e.currentTarget) {
+      onClose();
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,7 +40,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay" onMouseDown={handleOverlayMouseDown} onClick={handleOverlayClick}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '420px' }}>
         <div className="modal-header">
           <h3 className="modal-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

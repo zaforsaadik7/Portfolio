@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { X, Check } from 'lucide-react';
 import { uploadPortfolioFile } from '../services/portfolioService';
 import { formatUrl } from '../utils/urlHelper';
@@ -10,29 +10,47 @@ export default function AdminModal({ isOpen, onClose, sectionType, initialData, 
   const [previewImage, setPreviewImage] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
 
-  useEffect(() => {
-    if (!isOpen) return;
+  const wasOpenRef = useRef(false);
+  const mouseDownTargetRef = useRef(null);
 
-    if (STRING_SECTIONS.has(sectionType) && typeof initialData === 'string') {
-      setFormData(initialData);
-      if (sectionType === 'coverPhoto' || sectionType === 'profilePhoto') {
-        setPreviewImage(initialData);
-      } else {
-        setPreviewImage(null);
-      }
+  useEffect(() => {
+    if (!isOpen) {
+      wasOpenRef.current = false;
       return;
     }
 
-    if (initialData && typeof initialData === 'object') {
-      setFormData({ ...initialData });
-      setPreviewImage(initialData.image || initialData.fileUrl || null);
-    } else {
-      setFormData({});
-      setPreviewImage(null);
+    if (!wasOpenRef.current) {
+      wasOpenRef.current = true;
+      let dataToSet;
+      if (STRING_SECTIONS.has(sectionType) && typeof initialData === 'string') {
+        dataToSet = initialData;
+        setPreviewImage(sectionType === 'coverPhoto' || sectionType === 'profilePhoto' ? initialData : null);
+      } else if (initialData && typeof initialData === 'object') {
+        const cloned = { ...initialData };
+        if (Array.isArray(cloned.keywords)) cloned.keywords = cloned.keywords.join(', ');
+        if (Array.isArray(cloned.techStack)) cloned.techStack = cloned.techStack.join(', ');
+        if (Array.isArray(cloned.items)) cloned.items = cloned.items.join(', ');
+        dataToSet = cloned;
+        setPreviewImage(initialData.image || initialData.fileUrl || null);
+      } else {
+        dataToSet = {};
+        setPreviewImage(null);
+      }
+      setFormData(dataToSet);
     }
-  }, [initialData, sectionType, isOpen]);
+  }, [isOpen, sectionType, initialData]);
 
   if (!isOpen) return null;
+
+  const handleOverlayMouseDown = (e) => {
+    mouseDownTargetRef.current = e.target;
+  };
+
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget && mouseDownTargetRef.current === e.currentTarget) {
+      onClose();
+    }
+  };
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -68,6 +86,14 @@ export default function AdminModal({ isOpen, onClose, sectionType, initialData, 
     }
   };
 
+  const processArrayField = (val) => {
+    if (Array.isArray(val)) return val;
+    if (typeof val === 'string') {
+      return val.split(',').map(s => s.trim()).filter(Boolean);
+    }
+    return [];
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -86,6 +112,10 @@ export default function AdminModal({ isOpen, onClose, sectionType, initialData, 
       if (payload.url) payload.url = formatUrl(payload.url);
       if (payload.link) payload.link = formatUrl(payload.link);
       if (payload.demoLink) payload.demoLink = formatUrl(payload.demoLink);
+
+      if ('keywords' in payload) payload.keywords = processArrayField(payload.keywords);
+      if ('techStack' in payload) payload.techStack = processArrayField(payload.techStack);
+      if ('items' in payload && sectionType === 'skills') payload.items = processArrayField(payload.items);
     }
 
     onSave(payload);
@@ -260,8 +290,8 @@ export default function AdminModal({ isOpen, onClose, sectionType, initialData, 
                 type="text"
                 className="form-input"
                 placeholder="NLP, RAG, Temporal Reasoning"
-                value={Array.isArray(formData.keywords) ? formData.keywords.join(', ') : (formData.keywords || '')}
-                onChange={e => handleInputChange('keywords', e.target.value.split(',').map(s => s.trim()).filter(Boolean))}
+                value={formData.keywords || ''}
+                onChange={e => handleInputChange('keywords', e.target.value)}
               />
             </div>
           </>
@@ -302,8 +332,8 @@ export default function AdminModal({ isOpen, onClose, sectionType, initialData, 
                 type="text"
                 className="form-input"
                 placeholder="React, Tauri, Monaco"
-                value={Array.isArray(formData.techStack) ? formData.techStack.join(', ') : (formData.techStack || '')}
-                onChange={e => handleInputChange('techStack', e.target.value.split(',').map(s => s.trim()).filter(Boolean))}
+                value={formData.techStack || ''}
+                onChange={e => handleInputChange('techStack', e.target.value)}
               />
             </div>
           </>
@@ -354,8 +384,8 @@ export default function AdminModal({ isOpen, onClose, sectionType, initialData, 
                 type="text"
                 className="form-input"
                 placeholder="PyTorch, TensorFlow, Keras, Scikit-Learn"
-                value={Array.isArray(formData.items) ? formData.items.join(', ') : (formData.items || '')}
-                onChange={e => handleInputChange('items', e.target.value.split(',').map(s => s.trim()).filter(Boolean))}
+                value={formData.items || ''}
+                onChange={e => handleInputChange('items', e.target.value)}
                 required
               />
             </div>
@@ -457,7 +487,7 @@ export default function AdminModal({ isOpen, onClose, sectionType, initialData, 
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay" onMouseDown={handleOverlayMouseDown} onClick={handleOverlayClick}>
       <div className="modal-content" onClick={e => e.stopPropagation()}>
         <div className="modal-header">
           <h3 className="modal-title">{getModalTitle()}</h3>
