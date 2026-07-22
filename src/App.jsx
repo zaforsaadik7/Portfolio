@@ -28,11 +28,8 @@ export default function App() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [activeModal, setActiveModal] = useState({ isOpen: false, sectionType: null, initialData: null, editIndex: null });
 
-  const skipNextPersist = useRef(false);
-
   useEffect(() => {
     const unsubscribeData = subscribeToPortfolio((portfolioData) => {
-      skipNextPersist.current = true;
       setData(portfolioData);
       setIsLoading(false);
     });
@@ -44,19 +41,6 @@ export default function App() {
       unsubscribeAuth();
     };
   }, []);
-
-  useEffect(() => {
-    if (!data || isLoading) return;
-
-    if (skipNextPersist.current) {
-      skipNextPersist.current = false;
-      return;
-    }
-
-    persistPortfolioData(data).catch((error) => {
-      console.error('Failed to persist portfolio data:', error);
-    });
-  }, [data, isLoading]);
 
   const handleLogout = async () => {
     try {
@@ -191,6 +175,7 @@ export default function App() {
           break;
       }
 
+      persistPortfolioData(updated).catch(err => console.error('Failed to persist portfolio data:', err));
       return updated;
     });
   };
@@ -228,6 +213,8 @@ export default function App() {
         default:
           break;
       }
+
+      persistPortfolioData(updated).catch(err => console.error('Failed to persist portfolio data:', err));
       return updated;
     });
   };
