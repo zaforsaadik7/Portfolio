@@ -429,6 +429,43 @@ export default function AdminModal({ isOpen, onClose, sectionType, initialData, 
           </>
         );
 
+      case 'hobbies':
+        return (
+          <>
+            <div className="form-group">
+              <label className="form-label">Hobby Name / Title</label>
+              <input
+                type="text"
+                className="form-input"
+                placeholder="Photography, Open Source, Chess..."
+                value={formData.name || ''}
+                onChange={e => handleInputChange('name', e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Description</label>
+              <textarea
+                className="form-textarea"
+                rows={3}
+                placeholder="Brief description about this hobby or activity..."
+                value={formData.description || ''}
+                onChange={e => handleInputChange('description', e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Related Link (Optional)</label>
+              <input
+                type="text"
+                className="form-input"
+                placeholder="https://..."
+                value={formData.link || ''}
+                onChange={e => handleInputChange('link', e.target.value)}
+              />
+            </div>
+          </>
+        );
+
       case 'responseTime':
         return (
           <div className="form-group">

@@ -9,6 +9,7 @@ import EducationSection from './components/EducationSection';
 import SkillStackSection from './components/SkillStackSection';
 import ResearchInterestsSection from './components/ResearchInterestsSection';
 import ContactSection from './components/ContactSection';
+import HobbiesSection from './components/HobbiesSection';
 import Footer from './components/Footer';
 import LoginModal from './components/LoginModal';
 import AdminModal from './components/AdminModal';
@@ -165,6 +166,14 @@ export default function App() {
             updated.contact = [...(prev.contact || []), newItem];
           }
           break;
+        case 'hobbies':
+          if (initialData?.id) {
+            updated.hobbies = (prev.hobbies || []).map(h => h.id === initialData.id ? { ...h, ...savedPayload } : h);
+          } else {
+            const newItem = { id: `hob-${Date.now()}`, ...savedPayload };
+            updated.hobbies = [...(prev.hobbies || []), newItem];
+          }
+          break;
         case 'responseTime':
           updated.responseTime = typeof savedPayload === 'string' ? savedPayload : savedPayload.text;
           break;
@@ -209,6 +218,9 @@ export default function App() {
           break;
         case 'contact':
           updated.contact = prev.contact.filter(c => c.id !== idOrIndex);
+          break;
+        case 'hobbies':
+          updated.hobbies = (prev.hobbies || []).filter(h => h.id !== idOrIndex);
           break;
         default:
           break;
@@ -304,6 +316,14 @@ export default function App() {
               onAdd={() => openEditModal('researchInterests')}
               onEdit={(topic, idx) => openEditModal('researchInterests', topic, idx)}
               onDelete={(idx) => handleDeleteItem('researchInterests', idx)}
+            />
+
+            <HobbiesSection
+              hobbies={data.hobbies || []}
+              isAdmin={isAdmin}
+              onAdd={() => openEditModal('hobbies')}
+              onEdit={(hob) => openEditModal('hobbies', hob)}
+              onDelete={(id) => handleDeleteItem('hobbies', id)}
             />
 
             <ContactSection

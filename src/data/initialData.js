@@ -178,6 +178,7 @@ export const INITIAL_DATA = {
     { id: "c-3", type: "location", value: "Dhaka, Bangladesh", label: "Location" }
   ],
   responseTime: "Response time: ~24 hours",
+  hobbies: [],
   downloadCv: {
     fileUrl: "./CV.pdf",
     fileName: "Zafor_Saadik_CV.pdf",
