@@ -1,7 +1,7 @@
 import React from 'react';
-import { Download, Lock, LogOut, ShieldCheck, Edit2 } from 'lucide-react';
+import { Download, Lock, LogOut, ShieldCheck, Edit2, Copy } from 'lucide-react';
 
-export default function Header({ isAdmin, onOpenLogin, onLogout, downloadCvData, onEditCv }) {
+export default function Header({ isAdmin, onOpenLogin, onLogout, downloadCvData, onEditCv, onExportData }) {
   return (
     <>
       {isAdmin && (
@@ -11,9 +11,14 @@ export default function Header({ isAdmin, onOpenLogin, onLogout, downloadCvData,
               <span className="admin-dot"></span>
               <span>Admin mode — editing enabled</span>
             </div>
-            <button className="btn btn-secondary btn-sm" onClick={onLogout}>
-              <LogOut size={14} /> Exit
-            </button>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <button className="btn btn-primary btn-sm" onClick={onExportData} title="Copy updated portfolio JSON to clipboard">
+                <Copy size={14} /> Export / Copy JSON
+              </button>
+              <button className="btn btn-secondary btn-sm" onClick={onLogout}>
+                <LogOut size={14} /> Exit
+              </button>
+            </div>
           </div>
         </div>
       )}

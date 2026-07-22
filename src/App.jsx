@@ -67,6 +67,19 @@ export default function App() {
     }
   };
 
+  const handleExportData = () => {
+    const jsonString = JSON.stringify(data, null, 2);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(jsonString).then(() => {
+        alert("Portfolio data JSON copied to clipboard! Paste it into your assistant chat to update the site permanently for all visitors.");
+      }).catch(() => {
+        prompt("Copy your updated portfolio JSON below:", jsonString);
+      });
+    } else {
+      prompt("Copy your updated portfolio JSON below:", jsonString);
+    }
+  };
+
   const openEditModal = (sectionType, initialData = null, editIndex = null) => {
     setActiveModal({ isOpen: true, sectionType, initialData, editIndex });
   };
@@ -235,6 +248,7 @@ export default function App() {
         onLogout={handleLogout}
         downloadCvData={data.downloadCv}
         onEditCv={() => openEditModal('downloadCv', data.downloadCv)}
+        onExportData={handleExportData}
       />
 
       <main className="container" style={{ flex: 1 }}>
