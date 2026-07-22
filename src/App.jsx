@@ -177,9 +177,6 @@ export default function App() {
         case 'responseTime':
           updated.responseTime = typeof savedPayload === 'string' ? savedPayload : savedPayload.text;
           break;
-        case 'downloadCv':
-          updated.downloadCv = { ...prev.downloadCv, ...savedPayload, lastUpdated: new Date().getFullYear().toString() };
-          break;
         default:
           break;
       }

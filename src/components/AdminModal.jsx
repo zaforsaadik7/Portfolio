@@ -481,29 +481,6 @@ export default function AdminModal({ isOpen, onClose, sectionType, initialData, 
           </div>
         );
 
-      case 'downloadCv':
-        return (
-          <>
-            <div className="form-group">
-              <label className="form-label">Upload CV Document (PDF)</label>
-              <input type="file" accept=".pdf,application/pdf" onChange={handleFileUpload} className="form-input" disabled={isUploading} />
-              {isUploading && <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '6px' }}>Uploading...</p>}
-            </div>
-            <div className="form-group">
-              <label className="form-label">File URL or Path</label>
-              <input type="text" className="form-input" value={formData.fileUrl || ''} onChange={e => handleInputChange('fileUrl', e.target.value)} required />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Download File Name</label>
-              <input type="text" className="form-input" value={formData.fileName || 'Zafor_Saadik_CV.pdf'} onChange={e => handleInputChange('fileName', e.target.value)} />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Button Label Text</label>
-              <input type="text" className="form-input" value={formData.buttonText || 'Download CV'} onChange={e => handleInputChange('buttonText', e.target.value)} required />
-            </div>
-          </>
-        );
-
       default:
         return (
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>

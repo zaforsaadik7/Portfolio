@@ -1,7 +1,7 @@
 import React from 'react';
-import { Download, Lock, LogOut, ShieldCheck, Edit2, Copy } from 'lucide-react';
+import { Lock, LogOut, ShieldCheck, Copy } from 'lucide-react';
 
-export default function Header({ isAdmin, onOpenLogin, onLogout, downloadCvData, onEditCv, onExportData }) {
+export default function Header({ isAdmin, onOpenLogin, onLogout, onExportData }) {
   return (
     <>
       {isAdmin && (
@@ -39,29 +39,6 @@ export default function Header({ isAdmin, onOpenLogin, onLogout, downloadCvData,
           </ul>
 
           <div className="header-actions">
-            {downloadCvData?.fileUrl && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <a
-                  href={downloadCvData.fileUrl}
-                  download={downloadCvData.fileName || "Zafor_Saadik_CV.pdf"}
-                  className="btn btn-primary btn-sm"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Download size={15} /> {downloadCvData.buttonText || "Download CV"}
-                </a>
-                {isAdmin && (
-                  <button
-                    className="admin-edit-btn"
-                    onClick={onEditCv}
-                    title="Edit CV Download Settings"
-                  >
-                    <Edit2 size={14} />
-                  </button>
-                )}
-              </div>
-            )}
-
             {!isAdmin ? (
               <button
                 className="btn btn-ghost btn-sm"
