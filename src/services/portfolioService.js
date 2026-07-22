@@ -19,6 +19,7 @@ import {
   setAdminAuth,
   readFileAsDataURL,
 } from './storage';
+import { compressImage } from '../utils/imageCompressor';
 
 const PORTFOLIO_COLLECTION = 'portfolio';
 const PORTFOLIO_DOC_ID = 'main';
@@ -120,12 +121,21 @@ export const persistPortfolioData = async (data) => {
   saveStoredData(data);
 
   if (isFirebaseConfigured()) {
-    await setDoc(doc(db, PORTFOLIO_COLLECTION, PORTFOLIO_DOC_ID), data, { merge: true });
+    try {
+      const cleanData = JSON.parse(JSON.stringify(data));
+      await setDoc(doc(db, PORTFOLIO_COLLECTION, PORTFOLIO_DOC_ID), cleanData);
+      console.log('Successfully saved to Cloud Firestore portfolio/main!');
+    } catch (err) {
+      console.error('Firestore save error:', err);
+    }
   }
 };
 
-export const uploadPortfolioFile = async (file, storagePath) => {
-  const base64Promise = readFileAsDataURL(file);
+export const uploadPortfolioFile = async (file, storagePath = '') => {
+  let maxWidth = storagePath.includes('coverPhoto') ? 1200 : 500;
+  let maxHeight = storagePath.includes('coverPhoto') ? 500 : 500;
+
+  const compressedPromise = compressImage(file, maxWidth, maxHeight, 0.82);
 
   if (isFirebaseConfigured() && storage) {
     try {
@@ -137,12 +147,12 @@ export const uploadPortfolioFile = async (file, storagePath) => {
       await Promise.race([uploadBytes(fileRef, file), timeoutPromise]);
       return await getDownloadURL(fileRef);
     } catch (err) {
-      console.warn('Firebase Storage upload warning, using fast local encoding:', err.message);
-      return await base64Promise;
+      console.warn('Firebase Storage upload warning, using compressed image:', err.message);
+      return await compressedPromise;
     }
   }
 
-  return await base64Promise;
+  return await compressedPromise;
 };
 
 export { isFirebaseConfigured };
