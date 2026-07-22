@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatUrl } from '../utils/urlHelper';
 
 export default function Footer({ name, socialMedia }) {
   return (
@@ -8,7 +9,7 @@ export default function Footer({ name, socialMedia }) {
         <div>© {new Date().getFullYear()} · All rights reserved</div>
         <div className="footer-links">
           {socialMedia && socialMedia.map((s) => (
-            <a key={s.id} href={s.url} target="_blank" rel="noopener noreferrer">
+            <a key={s.id} href={formatUrl(s.url)} target="_blank" rel="noopener noreferrer">
               {s.label || s.platform}
             </a>
           ))}

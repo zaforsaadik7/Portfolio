@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Check } from 'lucide-react';
 import { uploadPortfolioFile } from '../services/portfolioService';
+import { formatUrl } from '../utils/urlHelper';
 
 const STRING_SECTIONS = new Set(['about', 'researchInterests', 'responseTime', 'coverPhoto', 'profilePhoto']);
 
@@ -79,6 +80,12 @@ export default function AdminModal({ isOpen, onClose, sectionType, initialData, 
       payload = typeof formData === 'string' ? formData : (formData.text || '');
     } else {
       payload = formData;
+    }
+
+    if (payload && typeof payload === 'object') {
+      if (payload.url) payload.url = formatUrl(payload.url);
+      if (payload.link) payload.link = formatUrl(payload.link);
+      if (payload.demoLink) payload.demoLink = formatUrl(payload.demoLink);
     }
 
     onSave(payload);
@@ -171,7 +178,7 @@ export default function AdminModal({ isOpen, onClose, sectionType, initialData, 
             </div>
             <div className="form-group">
               <label className="form-label">Profile URL</label>
-              <input type="url" className="form-input" placeholder="https://..." value={formData.url || ''} onChange={e => handleInputChange('url', e.target.value)} required />
+              <input type="text" className="form-input" placeholder="https://... or www.linkedin.com/..." value={formData.url || ''} onChange={e => handleInputChange('url', e.target.value)} required />
             </div>
           </>
         );
@@ -207,7 +214,7 @@ export default function AdminModal({ isOpen, onClose, sectionType, initialData, 
             </div>
             <div className="form-group">
               <label className="form-label">Related Link (Optional)</label>
-              <input type="url" className="form-input" placeholder="https://..." value={formData.link || ''} onChange={e => handleInputChange('link', e.target.value)} />
+              <input type="text" className="form-input" placeholder="https://..." value={formData.link || ''} onChange={e => handleInputChange('link', e.target.value)} />
             </div>
           </>
         );
@@ -245,7 +252,7 @@ export default function AdminModal({ isOpen, onClose, sectionType, initialData, 
             </div>
             <div className="form-group">
               <label className="form-label">Related Paper / Project Link</label>
-              <input type="url" className="form-input" placeholder="https://arxiv.org/..." value={formData.link || ''} onChange={e => handleInputChange('link', e.target.value)} />
+              <input type="text" className="form-input" placeholder="https://arxiv.org/..." value={formData.link || ''} onChange={e => handleInputChange('link', e.target.value)} />
             </div>
             <div className="form-group">
               <label className="form-label">Keywords / Tags (Comma separated)</label>
@@ -283,11 +290,11 @@ export default function AdminModal({ isOpen, onClose, sectionType, initialData, 
             </div>
             <div className="form-group">
               <label className="form-label">Primary Link (GitHub / Repo)</label>
-              <input type="url" className="form-input" placeholder="https://github.com/..." value={formData.link || ''} onChange={e => handleInputChange('link', e.target.value)} />
+              <input type="text" className="form-input" placeholder="https://github.com/..." value={formData.link || ''} onChange={e => handleInputChange('link', e.target.value)} />
             </div>
             <div className="form-group">
               <label className="form-label">Live Demo Link (Optional)</label>
-              <input type="url" className="form-input" placeholder="https://demo.example.com" value={formData.demoLink || ''} onChange={e => handleInputChange('demoLink', e.target.value)} />
+              <input type="text" className="form-input" placeholder="https://demo.example.com" value={formData.demoLink || ''} onChange={e => handleInputChange('demoLink', e.target.value)} />
             </div>
             <div className="form-group">
               <label className="form-label">Tech Stack Tags (Comma separated)</label>

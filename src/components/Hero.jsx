@@ -1,5 +1,6 @@
 import React from 'react';
 import { MapPin, Phone, Edit2, Plus, Trash2 } from 'lucide-react';
+import { formatUrl } from '../utils/urlHelper';
 
 export default function Hero({ data, isAdmin, onEditSection, onAddSocial, onEditSocial, onDeleteSocial }) {
   const { coverPhoto, profilePhoto, bio, socialMedia } = data;
@@ -39,7 +40,7 @@ export default function Hero({ data, isAdmin, onEditSection, onAddSocial, onEdit
                 {index > 0 && <span className="social-divider" aria-hidden="true">·</span>}
                 <div className="social-link-item">
                   <a
-                    href={social.url}
+                    href={formatUrl(social.url)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="social-link"
