@@ -291,16 +291,22 @@ a:hover {
 }
 
 .social-link {
+  display: inline-flex;
+  align-items: center;
   font-size: 0.88rem;
   font-weight: 500;
   color: var(--text-secondary);
   border-bottom: 1px solid transparent;
-  transition: color var(--transition-fast), border-color var(--transition-fast);
+  transition: transform 0.26s cubic-bezier(0.34, 1.56, 0.64, 1),
+              color var(--transition-fast),
+              border-color var(--transition-fast);
+  will-change: transform;
 }
 
 .social-link:hover {
   color: var(--color-accent);
   border-bottom-color: var(--color-accent-border);
+  transform: scale(1.12) translateY(-2px);
 }
 
 .social-divider {
@@ -1099,7 +1105,8 @@ a:hover {
 .skill-badge:active,
 .tag-pill:active,
 .profile-photo-wrapper:active,
-.btn:active {
+.btn:active,
+.social-link:active {
   transform: scale(0.97) !important;
   transition: transform 0.1s ease !important;
 }
